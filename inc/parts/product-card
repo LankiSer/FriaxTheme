@@ -1,0 +1,37 @@
+<?php
+if(!isset($args) || !$args['post_id']) {
+	return;
+}
+
+$classes = $args['classes'] ?? [];
+
+$post_id = $args['post_id'];
+$name = get_the_title($post_id);
+$img = get_the_post_thumbnail_url($post_id);
+$mat = get_field('mat',$post_id);
+$price = get_field('price',$post_id);
+$link = get_the_permalink($post_id);
+?>
+	<div class="products-item">
+        <div class="item-img"><img src="<?=$img?>" alt=""></div>
+        <div class="item-wrapper">
+            <a href="<?=$link?>" class="info">
+                <div class="name"><?php echo $name?></div>
+                <?php if(!empty($mat)) { ?>
+                    <div class="mat"><?php echo $mat?></div>
+                <?php } ?>
+                <?php if(!empty($price)) { ?>
+                    <div class="price"><?php echo $price?></div>
+                <?php } ?>
+            </a>
+            <div class="bottom-holder">
+                <div class="btn second open-modal" data-modal="product" data-title="<?=$name?>" data-src="#modal-product">Заказать</div>
+                <a href="<?=$link?>" class="link-icon">
+                    <svg width="7" height="12" viewBox="0 0 7 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 11L6 6L1 1" stroke="#F2F2F3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+<?php

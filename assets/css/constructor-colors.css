@@ -1,0 +1,80 @@
+/**
+ * Цветовые переменные для конструктора блоков
+ * Эти переменные можно динамически изменять через интерфейс конструктора
+ */
+
+:root {
+    /* Основные цвета бренда */
+    --color-primary: #4A90E2;           /* Основной цвет (синий) */
+    --color-secondary: #1a237e;         /* Вторичный цвет (темно-синий) */
+    --color-accent: #FFD700;            /* Акцентный цвет (золотой) */
+    
+    /* Дополнительные цвета */
+    --color-success: #4caf50;           /* Успех/положительный (зеленый) */
+    --color-danger: #dc3545;            /* Опасность/отрицательный (красный) */
+    --color-info: #17a2b8;              /* Информация (голубой) */
+    
+    /* Цвета текста */
+    --color-text-dark: #333333;         /* Основной темный текст */
+    --color-text-light: #666666;        /* Вторичный текст */
+    --color-text-white: #ffffff;        /* Белый текст */
+    
+    /* Цвета фона */
+    --color-background: #ffffff;         /* Основной фон */
+    --color-background-alt: #f8f9fa;    /* Альтернативный фон */
+    --color-background-dark: #1a237e;   /* Темный фон */
+    
+    /* Градиенты */
+    --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+    --gradient-accent: linear-gradient(135deg, var(--color-accent) 0%, #FFC700 100%);
+    --gradient-overlay: linear-gradient(135deg, rgba(26, 35, 126, 0.9) 0%, rgba(74, 144, 226, 0.8) 100%);
+    
+    /* Тени */
+    --shadow-small: 0 2px 10px rgba(0, 0, 0, 0.08);
+    --shadow-medium: 0 4px 15px rgba(0, 0, 0, 0.12);
+    --shadow-large: 0 6px 20px rgba(0, 0, 0, 0.15);
+    --shadow-primary: 0 4px 15px rgba(74, 144, 226, 0.3);
+    --shadow-accent: 0 4px 15px rgba(255, 215, 0, 0.4);
+    
+    /* Радиусы скругления */
+    --radius-small: 4px;
+    --radius-medium: 10px;
+    --radius-large: 20px;
+    --radius-round: 50px;
+    
+    /* Переходы */
+    --transition-fast: 0.2s ease;
+    --transition-medium: 0.3s ease;
+    --transition-slow: 0.4s ease;
+    
+    /* Размеры контейнеров */
+    --container-width: 1200px;
+    --container-wide: 1400px;
+    
+    /* Отступы секций */
+    --section-padding: 100px;
+    --section-padding-tablet: 80px;
+    --section-padding-mobile: 60px;
+    --section-padding-small: 40px;
+}
+
+/* Класс для применения цветовой темы к блокам */
+.constructor-block {
+    color: var(--color-text-dark);
+}
+
+/* Вспомогательные классы */
+.text-primary { color: var(--color-primary); }
+.text-secondary { color: var(--color-secondary); }
+.text-accent { color: var(--color-accent); }
+.text-success { color: var(--color-success); }
+.text-white { color: var(--color-text-white); }
+
+.bg-primary { background-color: var(--color-primary); }
+.bg-secondary { background-color: var(--color-secondary); }
+.bg-accent { background-color: var(--color-accent); }
+.bg-light { background-color: var(--color-background-alt); }
+
+.gradient-primary { background: var(--gradient-primary); }
+.gradient-accent { background: var(--gradient-accent); }
+
