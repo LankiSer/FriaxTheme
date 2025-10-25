@@ -9,14 +9,16 @@
  * @package Company
  */
 
-$rights = theme('rights');
-$phones = @settings('phones');
-$emails = @settings('emails');
-$socials = @settings('socials');
-$address = @settings('addresses');
-$time = theme('time');
-$reqs = @settings('requisites');
-$logo = wp_get_attachment_image_url(theme('logo'),'full');
+$logo = get_theme_logo();
+$company_name = get_theme_company_name();
+$company_subtitle = get_theme_company_subtitle();
+$phone = get_theme_phone();
+$phone_display = get_theme_phone_display();
+$address = get_theme_address();
+$working_hours = get_theme_working_hours();
+$working_hours_display = get_theme_working_hours_display();
+$copyright = get_theme_copyright();
+$copyright_year = get_theme_copyright_year();
 
 ?>
 
@@ -25,7 +27,15 @@ $logo = wp_get_attachment_image_url(theme('logo'),'full');
 			<div class="footer-top-wrapper">
 				<div class="container first">
 					<div class="footer-top">
-						<div class="footer-logo"><img src="<?=$logo?>" alt=""></div>
+						<div class="footer-logo">
+							<?= $logo ?>
+							<?php if (!empty($company_name)): ?>
+								<div class="footer-company-name"><?= $company_name ?></div>
+								<?php if (!empty($company_subtitle)): ?>
+									<div class="footer-company-subtitle"><?= $company_subtitle ?></div>
+								<?php endif; ?>
+							<?php endif; ?>
+						</div>
 						<div class="menu-item">
 							<div class="menu-title footer-title">Услуги</div>
 							<?php
@@ -58,21 +68,15 @@ $logo = wp_get_attachment_image_url(theme('logo'),'full');
 						</div>
 						<div class="info-holder">
 							<div class="info-title footer-title">Контакты</div>
-							<?php if(!empty($phones)) { ?>
-								<?php foreach($phones as $phone) { ?>
-									<a href="tel:<?=$phone['value']?>" class="info-value"><?php echo $phone['name']?></a>
-								<?php } ?>
-							<?php } ?>
-							<?php if(!empty($time)) { ?>
-								<div class="time"><?php echo $time?></div>
-							<?php } ?>
-							<?php if (!empty($socials)): ?>
-								<div class="soc-holder">
-									<?php foreach ($socials as $item) { ?>
-										<a href="<?=$item['value'];?>" class="soc"><?=get_image($item['icon'],[24,24]);?></a>
-									<?php } ?>
-								</div>
-							<?php endif ?>
+							<?php if (!empty($phone)): ?>
+								<a href="tel:<?= $phone ?>" class="info-value"><?= $phone_display ?></a>
+							<?php endif; ?>
+							<?php if (!empty($working_hours_display)): ?>
+								<div class="time"><?= $working_hours_display ?></div>
+							<?php endif; ?>
+							<?php if (!empty($address)): ?>
+								<div class="address"><?= $address ?></div>
+							<?php endif; ?>
 						</div>
 						<?php if(!empty($reqs)) { ?>
 							<div class="reqs-holder">
@@ -95,9 +99,7 @@ $logo = wp_get_attachment_image_url(theme('logo'),'full');
 								</svg>
 							</span>
 						</a>
-						<?php if(!empty($rights)) { ?>
-							<div class="rights"><?php echo $rights?></div>
-						<?php } ?>
+						<div class="rights"><?= $copyright ?>. <?= $copyright_year ?></div>
 					</div>
 				</div>
 			</div>

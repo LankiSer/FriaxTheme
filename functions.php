@@ -131,6 +131,10 @@ require get_template_directory() . '/inc/template-functions.php';
 
 require get_template_directory() . '/inc/woocommerce-support.php';
 
+//============= THEME SETTINGS =============
+
+require get_template_directory() . '/inc/theme-settings.php';
+
 //============= ACF BLOCKS =============
 
 // Автозагрузка ACF блоков
