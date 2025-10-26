@@ -42,7 +42,7 @@ if (!class_exists('categoriesBlock')) {
 			$tpath = wp_normalize_path(get_template_directory());
 			$cpath = wp_normalize_path(__DIR__);
 			$path = explode($tpath,$cpath)[1];
-			wp_enqueue_style('theme/categories-block',wp_normalize_path(get_template_directory_uri().$path.'/block.css'),array(),filemtime($cpath . '/block.css'));
+			// wp_enqueue_style('theme/categories-block',wp_normalize_path(get_template_directory_uri().$path.'/block.css'),array(),filemtime($cpath . '/block.css'));
 			// wp_enqueue_script('theme/name-block',wp_normalize_path(GSE()::theme_uri().$path.'/block.js'),array(),filemtime($cpath . '/block.js'));
 			return;
 		}

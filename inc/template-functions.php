@@ -168,3 +168,65 @@ function renderImage($id, $width = null, $height = null, $class = '', $custom_al
 
     echo $image_html;
 }
+
+if( function_exists('acf_add_local_field_group') ):
+
+acf_add_local_field_group(array(
+    'key' => 'group_product_cat_card',
+    'title' => 'Карточка',
+    'fields' => array(
+        array(
+            'key' => 'field_pcCardName',
+            'label' => 'Название карточки',
+            'name' => 'pcCardName',
+            'type' => 'text',
+        ),
+        array(
+            'key' => 'field_pcBannerTab',
+            'label' => 'Баннер',
+            'type' => 'tab',
+            'placement' => 'top',
+        ),
+        array(
+            'key' => 'field_pcBannerImage',
+            'label' => 'Фото',
+            'name' => 'pcBannerImage',
+            'type' => 'image',
+            'return_format' => 'id',
+            'preview_size' => 'medium',
+            'library' => 'all',
+        ),
+        array(
+            'key' => 'field_pcBannerTitle',
+            'label' => 'Заголовок',
+            'name' => 'pcBannerTitle',
+            'type' => 'text',
+        ),
+        array(
+            'key' => 'field_pcBannerSubtitle',
+            'label' => 'Подзаголовок',
+            'name' => 'pcBannerSubtitle',
+            'type' => 'text',
+        ),
+    ),
+    'location' => array(
+        array(
+            array(
+                'param' => 'taxonomy',
+                'operator' => '==',
+                'value' => 'product_cat',
+            ),
+        ),
+    ),
+));
+
+endif;
+
+add_filter('bcn_breadcrumb_title', 'change_breadcrumb_title', 10, 2);
+
+function change_breadcrumb_title($title, $item) {
+    if ($title === 'Товары' || $title === 'Каталог проектов') {
+        return 'Каталог';
+    }
+    return $title;
+}
