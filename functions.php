@@ -16,6 +16,7 @@ function theme_setup() {
 	add_theme_support( 'post-thumbnails' );
 	add_theme_support( 'widgets' );
 	add_theme_support( 'widgets-block-editor' );
+	add_theme_support( 'woocommerce' );
 
 	add_theme_support(
 		'html5',
