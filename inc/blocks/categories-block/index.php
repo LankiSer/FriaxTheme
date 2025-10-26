@@ -3,8 +3,8 @@
  * Block Name - ACF Block Registration
  */
 
-if (!class_exists('BlockName')) {
-	class BlockName
+if (!class_exists('categoriesBlock')) {
+	class categoriesBlock
 	{
 
 		public function __construct()
@@ -18,8 +18,8 @@ if (!class_exists('BlockName')) {
 			if (function_exists('acf_register_block_type')) {
 				acf_register_block_type(
 					array(
-						'name'              => 'name-block',
-						'title'             => 'Имя блока',
+						'name'              => 'categories-block',
+						'title'             => 'Блок: Категории',
 						'description'       => 'Описание',
 						// 'post_types'        => array(),
 						'render_callback'   => array($this, '_render'),
@@ -42,8 +42,8 @@ if (!class_exists('BlockName')) {
 			$tpath = wp_normalize_path(get_template_directory());
 			$cpath = wp_normalize_path(__DIR__);
 			$path = explode($tpath,$cpath)[1];
-			wp_enqueue_style('theme/name-block',wp_normalize_path(get_template_directory_uri().$path.'/block.css'),array(),filemtime($cpath . '/block.css'));
-			wp_enqueue_script('theme/name-block',wp_normalize_path(get_template_directory_uri().$path.'/block.js'),array(),filemtime($cpath . '/block.js'));
+			wp_enqueue_style('theme/categories-block',wp_normalize_path(get_template_directory_uri().$path.'/block.css'),array(),filemtime($cpath . '/block.css'));
+			// wp_enqueue_script('theme/name-block',wp_normalize_path(GSE()::theme_uri().$path.'/block.js'),array(),filemtime($cpath . '/block.js'));
 			return;
 		}
 
@@ -70,7 +70,7 @@ if (!class_exists('BlockName')) {
 }
 
 // Инициализация
-if (class_exists('BlockName')) {
-	return new BlockName();
+if (class_exists('categoriesBlock')) {
+	return new categoriesBlock();
 }
 ?>
