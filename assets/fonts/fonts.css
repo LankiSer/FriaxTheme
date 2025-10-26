@@ -40,3 +40,17 @@
 	font-weight: 900;
 	src: url("OpenSans-ExtraBold.ttf") format("truetype");
 }
+@font-face {
+	font-display: swap;
+	font-family: "Pobeda";
+	font-style: normal;
+	font-weight: 700;
+	src: url("pobeda-bold.ttf") format("truetype");
+}
+@font-face {
+	font-display: swap;
+	font-family: "Pobeda";
+	font-style: normal;
+	font-weight: 400;
+	src: url("pobeda-regular.ttf") format("truetype");
+}
