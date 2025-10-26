@@ -139,3 +139,32 @@ function wide_Setup() {
     add_theme_support( 'align-wide' );
 }
 add_action( 'after_setup_theme', 'wide_Setup' );
+
+function renderImage($id, $width = null, $height = null, $class = '', $custom_alt = '') {
+    if (empty($id)) {
+        return;
+    }
+
+    $size = 'full';
+    if ($width !== null && $height !== null) {
+        $size = [$width, $height];
+    } elseif ($width !== null) {
+        $size = [$width, 'full'];
+    } elseif ($height !== null) {
+        $size = ['full', $height];
+    }
+
+    $image_html = wp_get_attachment_image($id, $size);
+
+    $alt_text = get_post_meta($id, '_wp_attachment_image_alt', true);
+
+    if (empty($alt_text) && !empty($custom_alt)) {
+        $image_html = str_replace('alt=""', 'alt="' . esc_attr($custom_alt) . '"', $image_html);
+    }
+
+    if (!empty($class)) {
+        $image_html = str_replace('class="', 'class="' . esc_attr($class) . ' ', $image_html);
+    }
+
+    echo $image_html;
+}
