@@ -1,18 +1,31 @@
 <?php
 
 if (! defined('ABSPATH')) {
-    exit;
+    return;
 }
 
 $category = get_queried_object();
 
 if (empty($category) || !is_tax($category)) {
-    exit;
+    return;
 }
 
-$title = get_field('pcBannerTitle', 'term_' . $category->term_id) ?? $category->name;
-$sub = get_field('pcBannerSubtitle', 'term_' . $category->term_id) ?? $category->description;
-$photo = get_field('pcBannerImage', 'term_' . $category->term_id) ?? null;
+$title = get_field('pcBannerTitle', 'term_' . $category->term_id);
+if (empty($title)) {
+    $title = $category->name;
+}
+$sub = get_field('pcBannerSubtitle', 'term_' . $category->term_id);
+if (empty($sub)) {
+    $sub = $category->description;
+}
+$photo = get_field('pcBannerImage', 'term_' . $category->term_id);
+if (empty($photo)) {
+    $photo = null;
+}
+
+if (empty($title) && empty($sub) && empty($photo)) {
+    return;
+}
 
 ?>
 

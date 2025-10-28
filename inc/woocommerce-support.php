@@ -188,18 +188,22 @@ function theme_custom_sale_flash($html, $post, $product) {
     return '<span class="onsale">' . __('Скидка', 'theme') . '</span>';
 }
 
-/**
- * Localize script for AJAX
- */
-add_action('wp_enqueue_scripts', 'theme_localize_woocommerce_scripts');
-function theme_localize_woocommerce_scripts() {
-    wp_localize_script('main', 'themeWoo', [
-        'ajaxurl' => admin_url('admin-ajax.php'),
-        'nonce' => wp_create_nonce('theme-nonce'),
-        'strings' => [
-            'addedToCart' => __('Товар добавлен в корзину', 'theme'),
-            'error' => __('Произошла ошибка', 'theme'),
-        ],
-    ]);
+function register_my_widgets()
+{
+
+	register_sidebar(array(
+		'name'          => 'WooCommerce Sidebar',
+		'id'            => "sidebar-shop",
+		'description'   => '',
+		'class'         => '',
+		//		'before_widget' => '<li id="%1$s" class="widget %2$s">',
+		//		'after_widget'  => "</li>\n",
+		//		'before_title'  => '<h2 class="widgettitle">',
+		//		'after_title'   => "</h2>\n",
+		// 'before_sidebar' => '', // WP 5.6
+		// 'after_sidebar'  => '', // WP 5.6
+	));
 }
 
+
+add_action('widgets_init', 'register_my_widgets');
