@@ -220,6 +220,49 @@ acf_add_local_field_group(array(
     ),
 ));
 
+acf_add_local_field_group(array(
+    'key' => 'group_product_addons',
+    'title' => 'Дополнительные опции товара',
+    'fields' => array(
+        array(
+            'key' => 'field_product_addons',
+            'label' => 'Дополнительные опции',
+            'name' => 'product_addons',
+            'type' => 'repeater',
+            'layout' => 'block',
+            'button_label' => 'Добавить опцию',
+            'sub_fields' => array(
+                array(
+                    'key' => 'field_addon_name',
+                    'label' => 'Название опции',
+                    'name' => 'addon_name',
+                    'type' => 'text',
+                    'required' => 1,
+                ),
+                array(
+                    'key' => 'field_addon_price',
+                    'label' => 'Цена',
+                    'name' => 'addon_price',
+                    'type' => 'number',
+                    'required' => 1,
+                    'min' => 0,
+                    'step' => 1,
+                    'append' => '₽',
+                ),
+            ),
+        ),
+    ),
+    'location' => array(
+        array(
+            array(
+                'param' => 'post_type',
+                'operator' => '==',
+                'value' => 'product',
+            ),
+        ),
+    ),
+));
+
 endif;
 
 add_filter('bcn_breadcrumb_title', 'change_breadcrumb_title', 10, 2);
@@ -229,4 +272,53 @@ function change_breadcrumb_title($title, $item) {
         return 'Каталог';
     }
     return $title;
+}
+
+$enqueued_assets = [];
+
+function custom_enqueue_assets($css_path = '', $js_path = '') {
+    global $enqueued_assets; // Use the global array to track enqueued assets
+
+    // Normalize the template directory path
+    $tpath = wp_normalize_path(get_template_directory());
+
+    // Enqueue CSS if a valid path is provided and not already enqueued
+    if (!empty($css_path)) {
+        $css_handle = 'custom-style-' . md5($css_path); // Create a unique handle based on the path
+        if (!in_array($css_handle, $enqueued_assets)) {
+            wp_enqueue_style($css_handle, get_template_directory_uri() . '/' . $css_path, array(), null);
+            $enqueued_assets[] = $css_handle; // Add to the array of enqueued assets
+        }
+    }
+
+    // Enqueue JS if a valid path is provided and not already enqueued
+    if (!empty($js_path)) {
+        $js_handle = 'custom-script-' . md5($js_path); // Create a unique handle based on the path
+        if (!in_array($js_handle, $enqueued_assets)) {
+            wp_enqueue_script($js_handle, get_template_directory_uri() . '/' . $js_path, array(), null, true);
+            $enqueued_assets[] = $js_handle; // Add to the array of enqueued assets
+        }
+    }
+
+    return;
+}
+
+function getComponentFunc($string) {
+    if (empty($string)) {
+        return;
+    }
+
+    $componentFuncFolderPath =  get_template_directory() . '/inc/componentsFuncs/';
+
+    return $componentFuncFolderPath . $string;
+}
+
+function renderComponentFunc($string) {
+    if (empty($string)) {
+        return;
+    }
+
+    if ((@include_once $string) === false) {
+        return;
+    }
 }

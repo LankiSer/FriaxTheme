@@ -73,56 +73,7 @@ jQuery(document).ready(function($) {
     });
     
     //============= WOOCOMMERCE ENHANCEMENTS =============
-    
-    // AJAX добавление в корзину
-    $('body').on('click', '.ajax_add_to_cart', function(e) {
-        e.preventDefault();
-        
-        const $button = $(this);
-        const productId = $button.data('product_id');
-        const quantity = $button.data('quantity') || 1;
-        
-        if (!productId) {
-            console.error('Product ID not found');
-            return;
-        }
-        
-        // Показываем загрузку
-        $button.addClass('loading').prop('disabled', true);
-        
-        $.ajax({
-            url: themeWoo.ajaxurl,
-            type: 'POST',
-            data: {
-                action: 'theme_add_to_cart',
-                product_id: productId,
-                quantity: quantity,
-                nonce: themeWoo.nonce
-            },
-            success: function(response) {
-                if (response.success) {
-                    // Обновляем счетчик корзины
-                    $('.cart-count').text(response.data.cart_count);
-                    
-                    // Показываем уведомление
-                    showNotification(response.data.message, 'success');
-                    
-                    // Анимация кнопки
-                    $button.removeClass('loading').addClass('added');
-                    setTimeout(() => {
-                        $button.removeClass('added').prop('disabled', false);
-                    }, 2000);
-                } else {
-                    showNotification(response.data?.message || 'Ошибка добавления товара', 'error');
-                    $button.removeClass('loading').prop('disabled', false);
-                }
-            },
-            error: function() {
-                showNotification('Произошла ошибка', 'error');
-                $button.removeClass('loading').prop('disabled', false);
-            }
-        });
-    });
+
     
     //============= UTILITY FUNCTIONS =============
     
@@ -253,11 +204,20 @@ jQuery(document).ready(function($) {
         });
     }
 
-    document.querySelector('.mobile-open-filter__action').addEventListener('click', function() {
-        document.querySelector('.wc-catalog__sidebar').classList.add('active');
-    });
+    const openFilterBtn = document.querySelector('.mobile-open-filter__action');
+    const sidebar = document.querySelector('.wc-catalog__sidebar');
+    const closeBtn = document.querySelector('.wc-catalog__sidebar-close');
 
-    document.querySelector('.wc-catalog__sidebar-close').addEventListener('click', function() {
-        document.querySelector('.wc-catalog__sidebar').classList.remove('active');
-    });
+    if (openFilterBtn && sidebar) {
+        openFilterBtn.addEventListener('click', function() {
+            sidebar.classList.add('active');
+        });
+    }
+
+    if (closeBtn && sidebar) {
+        closeBtn.addEventListener('click', function() {
+            sidebar.classList.remove('active');
+        });
+    }
+
 });
