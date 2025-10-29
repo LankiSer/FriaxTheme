@@ -231,4 +231,33 @@ jQuery(document).ready(function($) {
         console.log('Modal Manager:', modalManager);
     }
     
+
+    const mobileFilterTrigger = document.querySelector('.mobile-filter-trigger');
+    const mobileFilterDropdown = document.querySelector('.mobile-filter-dropdown');
+    const mobileFilterArrow = document.querySelector('.mobile-filter-arrow');
+    
+    if (mobileFilterTrigger && mobileFilterDropdown) {
+        mobileFilterTrigger.addEventListener('click', function() {
+            mobileFilterDropdown.classList.toggle('active');
+            mobileFilterArrow.style.transform = mobileFilterDropdown.classList.contains('active') 
+                ? 'rotate(180deg)' 
+                : 'rotate(0deg)';
+        });
+        
+        // Закрытие dropdown при клике вне области
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.product-list__outer-holder__filters-mobile')) {
+                mobileFilterDropdown.classList.remove('active');
+                mobileFilterArrow.style.transform = 'rotate(0deg)';
+            }
+        });
+    }
+
+    document.querySelector('.mobile-open-filter__action').addEventListener('click', function() {
+        document.querySelector('.wc-catalog__sidebar').classList.add('active');
+    });
+
+    document.querySelector('.wc-catalog__sidebar-close').addEventListener('click', function() {
+        document.querySelector('.wc-catalog__sidebar').classList.remove('active');
+    });
 });

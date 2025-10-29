@@ -205,5 +205,50 @@ function register_my_widgets()
 	));
 }
 
-
 add_action('widgets_init', 'register_my_widgets');
+
+function CUSTOM_woocommerce_pagination()
+{
+?>
+    <?php
+
+    $args = [
+        'show_all'     => false, // показаны все страницы участвующие в пагинации
+        'end_size'     => 1,     // количество страниц на концах
+        'mid_size'     => 2,     // количество страниц вокруг текущей
+        'prev_next'    => true,  // выводить ли боковые ссылки "предыдущая/следующая страница".
+        'prev_text'    => '<div class="arrow-v1">←</div>',
+        'next_text'    => '<div class="arrow-v1">→</div>',
+        'type'         => 'array'
+    ];
+
+    $result = paginate_links($args);
+    if ($result) {
+        $prevArr = '<a href="#" class="prev disabled page-numbers arrow-v1">←</a>';
+        $nextArr = '<a href="#" class="next disabled page-numbers arrow-v1">→</a>';
+        if (strlen($result[0]) > 100) {
+            $prevArr = $result[0];
+            unset($result[0]);
+        }
+        if (strlen($result[array_key_last($result)]) > 100) {
+            $nextArr = $result[array_key_last($result)];
+            unset($result[array_key_last($result)]);
+        }
+
+    ?>
+        <div class="navigation pagination default woocommerce-pagination">
+            <?= $prevArr; ?>
+            <div class="nav-links">
+                <?php foreach ($result as $link) {
+                    echo $link;
+                } ?>
+            </div>
+            <?= $nextArr; ?>
+        </div>
+    <?php
+    }
+}
+
+
+remove_action('woocommerce_after_shop_loop', 'woocommerce_pagination', 10);
+add_action('woocommerce_after_shop_loop', 'CUSTOM_woocommerce_pagination', 10);
