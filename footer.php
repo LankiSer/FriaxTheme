@@ -105,6 +105,7 @@ $copyright_year = get_theme_copyright_year();
 			</div>
 		</div>
 	</footer>
+	<div id="noticer"></div>
 	<?php get_template_part('inc/parts/modals');?>
 
 <?php wp_footer(); ?>

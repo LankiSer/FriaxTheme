@@ -263,6 +263,34 @@ acf_add_local_field_group(array(
     ),
 ));
 
+acf_add_local_field_group(array(
+    'key' => 'group_project_examples',
+    'title' => 'Примеры реализации',
+    'fields' => array(
+        array(
+            'key' => 'field_project_examples_gallery',
+            'label' => 'Галерея',
+            'name' => 'project_examples_gallery',
+            'type' => 'gallery',
+            'return_format' => 'array',
+            'preview_size' => 'medium',
+            'insert' => 'append',
+            'library' => 'all',
+            'min' => 0,
+            'max' => 20, 
+        ),
+    ),
+    'location' => array(
+        array(
+            array(
+                'param' => 'post_type',
+                'operator' => '==',
+                'value' => 'product',
+            ),
+        ),
+    ),
+));
+
 endif;
 
 add_filter('bcn_breadcrumb_title', 'change_breadcrumb_title', 10, 2);

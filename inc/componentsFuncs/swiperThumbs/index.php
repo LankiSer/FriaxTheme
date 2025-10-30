@@ -144,13 +144,32 @@ function templateThumbsSlider($id = null, $gal = null, $title = null)
     if (empty($id) || empty($gal)) {
         return;
     }
-    custom_enqueue_assets(null, 'inc/componentsFuncs/swiperThumbs/index.js')
+    custom_enqueue_assets(null, 'inc/componentsFuncs/swiperThumbs/index.js');
+
+    global $product;
+    $stock_status = $product->get_stock_status();
+    $stock_text = '';
+    $stock_class = '';
+
+    if ($stock_status === 'instock') {
+        $stock_text = 'В наличии';
+        $stock_class = 'stock-instock';
+    } elseif ($stock_status === 'outofstock') {
+        $stock_text = 'Нет в наличии';
+        $stock_class = 'stock-outofstock';
+    } elseif ($stock_status === 'snyat-s-proizv') {
+        $stock_text = 'Снят с производства';
+        $stock_class = 'stock-snyat';
+    }
 
     // Display the main gallery and thumbnail gallery
 ?>
     <?php if (count($gal) > 1) { ?>
         <div class="single-product__swiper-holder swiper-thumbs__holder" data-lenis-prevent-touch data-lenis-prevent>
             <div class="holder">
+                <div class="wc-single__product-stock__badge-mobile wc-single__product-stock__badge <?= $stock_class; ?>">
+                    <?= $stock_text; ?>
+                </div>
                 <div class="swiper gallery-top" data-lenis-prevent-touch>
                     <div class="swiper-wrapper">
                         <?php foreach ($gal as $item) { ?>
@@ -182,6 +201,9 @@ function templateThumbsSlider($id = null, $gal = null, $title = null)
     <?php if (count($gal) == 1) { ?>
         <div class="single-product__swiper-holder swiper-thumbs__holder">
             <div class="holder">
+                <div class="wc-single__product-stock__badge-mobile wc-single__product-stock__badge <?= $stock_class; ?>">
+                    <?= $stock_text; ?>
+                </div>
                 <div class="swiper gallery-top" data-lenis-prevent-touch>
                     <div class="swiper-wrapper">
                         <?php foreach ($gal as $item) { ?>

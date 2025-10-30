@@ -382,3 +382,136 @@ function custom_cart_item_id($cart_id, $product_id, $variation_id, $variation, $
     }
     return $cart_id;
 }
+
+// Сохранение доп опций в заказе
+add_action('woocommerce_checkout_create_order_line_item', 'save_addons_to_order_item', 10, 4);
+
+function save_addons_to_order_item($item, $cart_item_key, $cart_item, $order) {
+    if (isset($cart_item['addons']) && !empty($cart_item['addons'])) {
+        // Сохраняем общую стоимость дополнений
+        $addons_total = 0;
+        foreach ($cart_item['addons'] as $addon) {
+            $addons_total += floatval($addon['price']);
+            
+            // Сохраняем каждое дополнение как мета-данные
+            $item->add_meta_data(
+                $addon['name'],
+                wc_price($addon['price']),
+                true
+            );
+        }
+        
+        // Сохраняем общую стоимость всех дополнений
+        $item->add_meta_data(
+            '_addons_total',
+            $addons_total,
+            true
+        );
+        
+        // Сохраняем список всех дополнений в сериализованном виде
+        $item->add_meta_data(
+            '_addons_list',
+            $cart_item['addons'],
+            true
+        );
+    }
+}
+
+// Отображение доп опций в админке в заказах
+add_action('woocommerce_before_order_itemmeta', 'display_addons_in_admin_order', 10, 3);
+
+function display_addons_in_admin_order($item_id, $item, $product) {
+    // Проверяем, есть ли у товара дополнения
+    $addons_list = $item->get_meta('_addons_list');
+    
+    if (!empty($addons_list)) {
+        echo '<div class="wc-order-item-addons" style="margin-top: 10px; padding: 10px; background: #f8f8f8; border-radius: 4px;">';
+        echo '<strong style="display: block; margin-bottom: 5px;">Дополнительные опции:</strong>';
+        
+        foreach ($addons_list as $addon) {
+            echo '<div style="display: flex; justify-content: space-between; margin-bottom: 3px;">';
+            echo '<span>' . esc_html($addon['name']) . '</span>';
+            echo '<span style="font-weight: bold;">+' . wc_price($addon['price']) . '</span>';
+            echo '</div>';
+        }
+        
+        $addons_total = $item->get_meta('_addons_total');
+        if ($addons_total) {
+            echo '<div style="display: flex; justify-content: space-between; margin-top: 5px; padding-top: 5px; border-top: 1px solid #ddd; font-weight: bold;">';
+            echo '<span>Общая стоимость дополнений:</span>';
+            echo '<span>+' . wc_price($addons_total) . '</span>';
+            echo '</div>';
+        }
+        
+        echo '</div>';
+    }
+}
+
+// Отображение доп опций в emails
+add_filter('woocommerce_order_item_name', 'display_addons_in_emails', 10, 2);
+
+function display_addons_in_emails($item_name, $item) {
+    $addons_list = $item->get_meta('_addons_list');
+    
+    if (!empty($addons_list) && is_array($addons_list)) {
+        $addons_html = '<div style="margin: 5px 0 0 10px; font-size: 0.9em;">';
+        $addons_html .= '<strong>Доп. опции:</strong><br>';
+        
+        foreach ($addons_list as $addon) {
+            $addons_html .= '— ' . esc_html($addon['name']) . ' (+' . wc_price($addon['price']) . ')<br>';
+        }
+        
+        $addons_html .= '</div>';
+        $item_name .= $addons_html;
+    }
+    
+    return $item_name;
+}
+
+remove_action('woocommerce_checkout_order_review', 'woocommerce_checkout_payment', 20);
+add_action('woocommerce_checkout_after_customer_details', 'woocommerce_checkout_payment', 20);
+
+
+// Добавляем nonce для безопасности
+add_action('wp_enqueue_scripts', 'add_custom_checkout_nonce');
+function add_custom_checkout_nonce() {
+    if (is_checkout()) {
+        wp_localize_script('wc-checkout', 'custom_checkout_params', array(
+            'ajax_url' => admin_url('admin-ajax.php'),
+            'update_order_review_nonce' => wp_create_nonce('update_order_review_nonce')
+        ));
+    }
+}
+
+// AJAX обработчик для обновления review order
+add_action('wp_ajax_update_order_review', 'ajax_update_order_review');
+add_action('wp_ajax_nopriv_update_order_review', 'ajax_update_order_review');
+
+function ajax_update_order_review() {
+    // Проверка nonce
+    if (!isset($_POST['security']) || !wp_verify_nonce($_POST['security'], 'update_order_review_nonce')) {
+        wp_die('Security check failed');
+    }
+    
+    // Парсим переданные данные
+    if (isset($_POST['post_data'])) {
+        parse_str($_POST['post_data'], $post_data);
+        
+        // Устанавливаем выбранные методы в сессии
+        if (isset($post_data['shipping_method'])) {
+            WC()->session->set('chosen_shipping_methods', $post_data['shipping_method']);
+        }
+        
+        if (isset($post_data['payment_method'])) {
+            WC()->session->set('chosen_payment_method', $post_data['payment_method']);
+        }
+    }
+    
+    // Обновляем итоги
+    WC()->cart->calculate_totals();
+    
+    // Выводим обновленный блок review order
+    woocommerce_order_review();
+    
+    wp_die();
+}
